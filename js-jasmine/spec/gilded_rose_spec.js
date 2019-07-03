@@ -7,7 +7,7 @@ describe("Gilded Rose", function() {
     expect(items[0].name).toEqual("foo");
   });
 
-  describe("Items", function() {
+  describe("Items class", function() {
     var item1
 
     beforeEach(function() {
@@ -32,28 +32,45 @@ describe("Gilded Rose", function() {
     });
   });
 
-  describe("Shop", function() {
-    var item1
-    var item2
-    var shop
+  describe("Shop class", function() {
 
-    beforeEach(function() {
-      item1 = new Item("Item 1", 10, 15);
-      item2 = new Item("Item 2", 30, 40);
-      shop = new Shop([item1, item2]);
-    });
+    describe("Normal Items", function() {
+      var item1
+      var item2
+      var shop
+      var items
 
-    it("normal items sellIn days should reduce by 1 every update", function(){
-      var items = shop.updateQuality();
-      expect(items[0].sellIn).toEqual(9)
-    });
+      beforeEach(function() {
+        item1 = new Item("Item 1", 10, 15);
+        item2 = new Item("Item 2", 1, 10);
+        shop = new Shop([item1, item2]);
+      });
 
-    it("normal items quality should reduce by 1 every update", function(){
-      var items = shop.updateQuality();
-      expect(items[0].quality).toEqual(14)
+      it("should reduce sellIn days by 1 every update", function() {
+        var items = shop.updateQuality();
+        expect(items[0].sellIn).toEqual(9)
+      });
+
+      it("should reduce quality by 1 every update", function() {
+        var items = shop.updateQuality();
+        expect(items[0].quality).toEqual(14)
+      });
+
+      it("once sellIn date is passed, item degrades twice as fast", function() {
+        items = shop.updateQuality();
+        items = shop.updateQuality();
+        expect(items[1].quality).toEqual(7)
+      });
+
+      it("quality can never be negative", function() {
+        for (var i = 0; i < 7; i++) items = shop.updateQuality();
+        expect(items[1].quality).toEqual(0)
+      });
+
+
+
+
+
     });
   });
-
-
-
 });
